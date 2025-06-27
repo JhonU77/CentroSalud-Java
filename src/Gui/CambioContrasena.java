@@ -1,6 +1,6 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
  */
 package Gui;
 
@@ -16,12 +16,13 @@ import javax.swing.JOptionPane;
  *
  * @author farro
  */
-public class ConfContrasena extends javax.swing.JFrame {
+public class CambioContrasena extends javax.swing.JDialog {
 
     /**
-     * Creates new form ConfContraseña
+     * Creates new form CambioContrasena
      */
-    public ConfContrasena() {
+    public CambioContrasena(java.awt.Dialog parent, boolean modal) {
+        super(parent, modal);
         initComponents();
         jpassNuevaContrasena.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
             public void insertUpdate(javax.swing.event.DocumentEvent e) {
@@ -72,8 +73,7 @@ public class ConfContrasena extends javax.swing.JFrame {
         jbttMostrarContraseña2 = new javax.swing.JToggleButton();
         jbttMostrarContraseña1 = new javax.swing.JToggleButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -160,14 +160,21 @@ public class ConfContrasena extends javax.swing.JFrame {
         });
         jPanel1.add(jbttMostrarContraseña1, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 130, 30, 30));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 310, 360));
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void bttCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttCerrarActionPerformed
-        System.exit(0);
-    }//GEN-LAST:event_bttCerrarActionPerformed
 
     private void jbttConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbttConfirmarActionPerformed
         String nuevaPass = new String(jpassNuevaContrasena.getPassword());
@@ -213,6 +220,10 @@ public class ConfContrasena extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jbttConfirmarActionPerformed
 
+    private void bttCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttCerrarActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_bttCerrarActionPerformed
+
     private void jbttMostrarContraseña2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbttMostrarContraseña2ActionPerformed
         if (jpassConfirmarContrasena.getEchoChar() == (char) 0) {
             jpassConfirmarContrasena.setEchoChar('*');
@@ -229,7 +240,6 @@ public class ConfContrasena extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jbttMostrarContraseña1ActionPerformed
 
-    
     private void validarRequisitosContrasena(String pass) {
         if (ValidarContrasena.tieneLongitudMinima(pass)) {
             jlabel8caracter.setForeground(new java.awt.Color(0, 128, 0)); // verde
@@ -256,7 +266,6 @@ public class ConfContrasena extends javax.swing.JFrame {
         jlabel1simbolo.setForeground(java.awt.Color.RED);
         jbttConfirmar.setEnabled(false);
     }
-
     /**
      * @param args the command line arguments
      */
@@ -274,21 +283,27 @@ public class ConfContrasena extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ConfContrasena.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CambioContrasena.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ConfContrasena.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CambioContrasena.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ConfContrasena.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CambioContrasena.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ConfContrasena.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CambioContrasena.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        //</editor-fold>
 
-        /* Create and display the form */
+        /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ConfContrasena().setVisible(true);
+                CambioContrasena dialog = new CambioContrasena(new javax.swing.JDialog(), true);
+                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosing(java.awt.event.WindowEvent e) {
+                        System.exit(0);
+                    }
+                });
+                dialog.setVisible(true);
             }
         });
     }

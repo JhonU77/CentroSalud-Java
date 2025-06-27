@@ -11,8 +11,14 @@ package Modelo;
 public class SesionUsuario {
     private static String dniUsuario;
     private static String correoUsuario;
+    private static String cargoUsuario;
 
-    public static void setUsuario(String dni, String correo) {
+    public static void setUsuario(String dni, String correo, String cargo) {
+        dniUsuario = dni;
+        correoUsuario = correo;
+        cargoUsuario = cargo;
+    }
+    public static void setRestauracion(String dni, String correo) {
         dniUsuario = dni;
         correoUsuario = correo;
     }
@@ -23,6 +29,10 @@ public class SesionUsuario {
 
     public static String getCorreoUsuario() {
         return correoUsuario;
+    }
+    
+    public static String getCargoUsuario() {
+        return cargoUsuario;
     }
 
     public static void clear() {

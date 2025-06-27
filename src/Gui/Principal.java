@@ -4,11 +4,21 @@
  */
 package Gui;
 
+import Modelo.SesionUsuario;
+import javax.swing.JOptionPane;
+
+
 /**
  *
  * @author farro
  */
 public class Principal extends javax.swing.JFrame {
+
+    private boolean puedeAccederCita = false;
+    private boolean puedeAccederPersonal = false;
+    private boolean puedeAccederHistorial = false;
+    private boolean puedeAccederReporte = false;
+    private boolean puedeAccederMetas = false;
 
     /**
      * Creates new form prueba
@@ -40,7 +50,9 @@ public class Principal extends javax.swing.JFrame {
         bttHistorial = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         labelUsuario = new javax.swing.JLabel();
+        bttMetas = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -85,10 +97,15 @@ public class Principal extends javax.swing.JFrame {
         bttReporte.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Resources/Report.png"))); // NOI18N
         bttReporte.setText("    Reporte");
         bttReporte.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        bttReporte.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bttReporteActionPerformed(evt);
+            }
+        });
 
         bttLogin.setBackground(new java.awt.Color(255, 255, 255));
         bttLogin.setForeground(new java.awt.Color(0, 0, 0));
-        bttLogin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Resources/Settings.png"))); // NOI18N
+        bttLogin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Resources/Person.png"))); // NOI18N
         bttLogin.setText("    Login");
         bttLogin.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         bttLogin.addActionListener(new java.awt.event.ActionListener() {
@@ -121,13 +138,31 @@ public class Principal extends javax.swing.JFrame {
             }
         });
 
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel2.setText("Usuario");
+        jLabel2.setText("Usuario:");
+
+        labelUsuario.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
+
+        bttMetas.setBackground(new java.awt.Color(255, 255, 255));
+        bttMetas.setForeground(new java.awt.Color(0, 0, 0));
+        bttMetas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Resources/meta.png"))); // NOI18N
+        bttMetas.setText("    Metas");
+        bttMetas.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        bttMetas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bttMetasActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addContainerGap(27, Short.MAX_VALUE)
+                .addComponent(labelUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(24, 24, 24))
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -141,18 +176,13 @@ public class Principal extends javax.swing.JFrame {
                         .addComponent(jButton2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE))
+                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel1)
-                        .addGap(6, 6, 6)))
+                        .addGap(6, 6, 6))
+                    .addComponent(bttMetas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(labelUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -175,10 +205,12 @@ public class Principal extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(bttHistorial)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(bttPersonal)
+                .addComponent(bttMetas)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(bttReporte)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 221, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(bttPersonal)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 184, Short.MAX_VALUE)
                 .addComponent(bttLogin)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(bttCerrar)
@@ -187,15 +219,17 @@ public class Principal extends javax.swing.JFrame {
 
         jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 240, 560));
 
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Resources/fondo principal.jpg"))); // NOI18N
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 660, Short.MAX_VALUE)
+            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 560, Short.MAX_VALUE)
+            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 10, 660, 560));
@@ -206,18 +240,65 @@ public class Principal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void bttCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttCerrarActionPerformed
-
+        
     }//GEN-LAST:event_bttCerrarActionPerformed
 
     private void bttLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttLoginActionPerformed
-        Login login = new Login();
-        login.setLocationRelativeTo(null);
-        login.setVisible(true);
-        login.setLocation(580, 102);
+        Sesion sesion = new Sesion(this, true);
+        sesion.setVisible(true);
+
+        if (SesionUsuario.getCorreoUsuario() != null) {
+            System.out.println("Sesión activa, cargando datos en Principal...");
+            labelUsuario.setText(SesionUsuario.getCorreoUsuario());
+
+            String rol = SesionUsuario.getCargoUsuario();
+            System.out.println("rol obtenido: " + rol);
+
+            // Reiniciar permisos
+            puedeAccederCita = false;
+            puedeAccederPersonal = false;
+            puedeAccederHistorial = false;
+            puedeAccederReporte = false;
+            puedeAccederMetas = false;
+            
+            switch (rol) {
+                case "Jefe de Area":
+                    puedeAccederCita = true;
+                    puedeAccederPersonal = true;
+                    puedeAccederHistorial = true;
+                    puedeAccederReporte = true;
+                    break;
+                case "Usuario Limitado":
+                    puedeAccederCita = true;
+                    puedeAccederHistorial = true;
+                    break;
+                case "Admin":
+                    puedeAccederPersonal = true;
+                    break;
+                default:
+                    JOptionPane.showMessageDialog(this, "Rol no reconocido: " + rol);
+            }
+
+            // Activar o desactivar botones según permisos
+            bttCita.setEnabled(puedeAccederCita);
+            bttPersonal.setEnabled(puedeAccederPersonal);
+            bttHistorial.setEnabled(puedeAccederHistorial);
+            bttReporte.setEnabled(puedeAccederReporte);
+            bttMetas.setEnabled(puedeAccederCita);
+
+        } else {
+            System.out.println("Sesión no activa. No se cargó usuario.");
+        }
     }//GEN-LAST:event_bttLoginActionPerformed
 
     private void bttCitaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttCitaActionPerformed
-        // TODO add your handling code here:
+        if (!puedeAccederCita) {
+            JOptionPane.showMessageDialog(this, "Acceso denegado");
+            return;
+        }
+        Cita cita = new Cita();
+        cita.setVisible(true);
+        cita.setLocation(428, 72);
     }//GEN-LAST:event_bttCitaActionPerformed
 
     private void bttHistorialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttHistorialActionPerformed
@@ -225,10 +306,25 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_bttHistorialActionPerformed
 
     private void bttPersonalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttPersonalActionPerformed
-        GestionarUsuario admin = new GestionarUsuario();
-        admin.setVisible(true);
-        admin.setLocation(451, 101);
+        if (!puedeAccederPersonal) {
+            JOptionPane.showMessageDialog(this, "Acceso denegado");
+            return;
+        }
+        GestionarPersonal personal = new GestionarPersonal();
+        personal.setVisible(true);
+        personal.setLocation(428, 72);
     }//GEN-LAST:event_bttPersonalActionPerformed
+
+    private void bttReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttReporteActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_bttReporteActionPerformed
+
+    private void bttMetasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttMetasActionPerformed
+        if (!puedeAccederMetas) {
+            JOptionPane.showMessageDialog(this, "Acceso denegado");
+            return;
+        }
+    }//GEN-LAST:event_bttMetasActionPerformed
 
     /**
      * @param args the command line arguments
@@ -271,12 +367,14 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JButton bttCita;
     private javax.swing.JButton bttHistorial;
     private javax.swing.JButton bttLogin;
+    private javax.swing.JButton bttMetas;
     private javax.swing.JButton bttPersonal;
     private javax.swing.JButton bttReporte;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;
