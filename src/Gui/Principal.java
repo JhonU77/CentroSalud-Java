@@ -240,7 +240,31 @@ public class Principal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void bttCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttCerrarActionPerformed
-        
+        int confirm = JOptionPane.showConfirmDialog(this, "¿Deseas cerrar sesión?", "Cerrar Sesión", JOptionPane.YES_NO_OPTION);
+        if (confirm == JOptionPane.YES_OPTION) {
+
+            // Limpiar datos de sesión
+            SesionUsuario.clear();
+
+            // Limpiar interfaz
+            labelUsuario.setText("Sin usuario");
+
+            // Desactivar permisos
+            puedeAccederCita = false;
+            puedeAccederPersonal = false;
+            puedeAccederHistorial = false;
+            puedeAccederReporte = false;
+            puedeAccederMetas = false;
+
+            // Desactivar botones
+            bttCita.setEnabled(false);
+            bttPersonal.setEnabled(false);
+            bttHistorial.setEnabled(false);
+            bttReporte.setEnabled(false);
+            bttMetas.setEnabled(false);
+
+            JOptionPane.showMessageDialog(this, "Sesión cerrada exitosamente.");
+        }
     }//GEN-LAST:event_bttCerrarActionPerformed
 
     private void bttLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttLoginActionPerformed
@@ -267,6 +291,7 @@ public class Principal extends javax.swing.JFrame {
                     puedeAccederPersonal = true;
                     puedeAccederHistorial = true;
                     puedeAccederReporte = true;
+                     puedeAccederMetas = true;
                     break;
                 case "Usuario Limitado":
                     puedeAccederCita = true;
@@ -302,7 +327,13 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_bttCitaActionPerformed
 
     private void bttHistorialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttHistorialActionPerformed
-        // TODO add your handling code here:
+        if (!puedeAccederHistorial) {
+            JOptionPane.showMessageDialog(this, "Acceso denegado");
+            return;
+        }
+        Atencion atencion = new Atencion();
+        atencion.setVisible(true);
+        atencion.setLocation(428,72);
     }//GEN-LAST:event_bttHistorialActionPerformed
 
     private void bttPersonalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttPersonalActionPerformed
@@ -316,7 +347,11 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_bttPersonalActionPerformed
 
     private void bttReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttReporteActionPerformed
-        // TODO add your handling code here:
+        if (!puedeAccederReporte) {
+            JOptionPane.showMessageDialog(this, "Acceso denegado");
+            return;
+        }
+        
     }//GEN-LAST:event_bttReporteActionPerformed
 
     private void bttMetasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttMetasActionPerformed
@@ -324,6 +359,9 @@ public class Principal extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Acceso denegado");
             return;
         }
+        Metas metas = new Metas();
+        metas.setVisible(true);
+        metas.setLocation(428,72);
     }//GEN-LAST:event_bttMetasActionPerformed
 
     /**

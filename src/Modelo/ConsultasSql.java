@@ -40,6 +40,26 @@ public class ConsultasSql {
 
         return dni;
     }
+    
+    public static String obtenerDniPersonalPorCorreo(String correo) {
+        String dni = null;
+        String sql = "SELECT DNI_Personal FROM Usuario WHERE Correo = ?";
+
+        try (Connection con = Conexion.getConexion();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, correo);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                dni = rs.getString("DNI_Personal");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error al obtener DNI_Personal: " + e.getMessage());
+        }
+
+        return dni;
+    }
 
     
     // Obtener ID de Profesión según el nombre

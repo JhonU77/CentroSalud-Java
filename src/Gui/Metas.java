@@ -4,8 +4,6 @@
  */
 package Gui;
 
-import Modelo.Conexion;
-import Modelo.ConsultasSql;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.JTextField;
@@ -15,7 +13,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -85,12 +82,12 @@ public class Metas extends javax.swing.JFrame {
         txtDescProfesion = new javax.swing.JTextField();
         jLabel21 = new javax.swing.JLabel();
         txtDescColegio = new javax.swing.JTextField();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        bttEditarMeta = new javax.swing.JButton();
+        bttEliminarMeta = new javax.swing.JButton();
         cmbMicrored = new javax.swing.JComboBox<>();
         jButton1 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -163,6 +160,11 @@ public class Metas extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tableMostrarMetas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableMostrarMetasMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tableMostrarMetas);
 
         jPanel2.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 380, 640, 140));
@@ -234,11 +236,21 @@ public class Metas extends javax.swing.JFrame {
         jPanel2.add(jLabel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 290, 70, 20));
         jPanel2.add(txtDescColegio, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 290, 130, -1));
 
-        jButton3.setText("Editar Meta");
-        jPanel2.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 290, 120, -1));
+        bttEditarMeta.setText("Editar Meta");
+        bttEditarMeta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bttEditarMetaActionPerformed(evt);
+            }
+        });
+        jPanel2.add(bttEditarMeta, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 290, 120, -1));
 
-        jButton4.setText("Eliminar Meta");
-        jPanel2.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 320, 120, -1));
+        bttEliminarMeta.setText("Eliminar Meta");
+        bttEliminarMeta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bttEliminarMetaActionPerformed(evt);
+            }
+        });
+        jPanel2.add(bttEliminarMeta, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 320, 120, -1));
 
         cmbMicrored.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -280,57 +292,58 @@ public class Metas extends javax.swing.JFrame {
     }//GEN-LAST:event_bttBuscarPersonalActionPerformed
 
     private void bttAsignarMetaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttAsignarMetaActionPerformed
-        String nombres = txtNombre.getText().trim();
-        String apellidoPaterno = txtApellidoPaterno.getText().trim();
-        String atencion = cmbAtencion.getSelectedItem().toString();
         String cantidadStr = txtNumeroMeta.getText().trim();
         java.util.Date fechaInicio = dateFechaInicio.getDate();
         java.util.Date fechaFin = dateFechaFin.getDate();
+        String atencionSeleccionada = cmbAtencion.getSelectedItem().toString();
+        String establecimientoSeleccionado = cmbEstablecimiento.getSelectedItem().toString();
+        String nombrePersonal = txtNombre.getText();
+        String apellidoPaterno = txtApellidoPaterno.getText();
 
-        if (nombres.isEmpty() || apellidoPaterno.isEmpty() || cantidadStr.isEmpty() || fechaInicio == null || fechaFin == null) {
-            JOptionPane.showMessageDialog(null, "Todos los campos deben estar completos.");
+        if (cantidadStr.isEmpty() || fechaInicio == null || fechaFin == null ||
+            atencionSeleccionada == null || establecimientoSeleccionado == null ||
+            nombrePersonal.isEmpty() || apellidoPaterno.isEmpty()) {
+
+            JOptionPane.showMessageDialog(null, "Complete todos los campos antes de asignar la meta.");
             return;
         }
 
-        int cantidad;
-        try {
-            cantidad = Integer.parseInt(cantidadStr);
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "Cantidad debe ser un número válido.");
+        int cantidadMeta = Integer.parseInt(cantidadStr);
+        int idAtencion = ConsultasSql.obtenerIdAtencion(atencionSeleccionada);
+        int idEstablecimiento = ConsultasSql.obtenerIdEstablecimiento(establecimientoSeleccionado);
+        String dni = ConsultasSql.obtenerDniPersonalPorNombre(nombrePersonal, apellidoPaterno);
+
+        if (dni == null || idAtencion == -1 || idEstablecimiento == -1) {
+            JOptionPane.showMessageDialog(null, "Error al obtener datos del personal, atención o establecimiento.");
             return;
         }
 
-        String dni = ConsultasSql.obtenerDniPersonalPorNombre(nombres, apellidoPaterno);
-        int idAtencion = ConsultasSql.obtenerIdAtencion(atencion);
+        java.sql.Date sqlFechaInicio = new java.sql.Date(fechaInicio.getTime());
+        java.sql.Date sqlFechaFin = new java.sql.Date(fechaFin.getTime());
 
-        if (dni == null || idAtencion == -1) {
-            JOptionPane.showMessageDialog(null, "Error al obtener DNI o ID de atención.");
-            return;
-        }
-
-        String sql = "INSERT INTO MetaExamen (Cantidad_MetaExamen, FechaInicio_MetaExamen, FechaFin_MetaExamen, DNI_Personal, ID_Atencion) " +
-                     "VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO MetaExamen (Cantidad_MetaExamen, FechaInicio_MetaExamen, FechaFin_MetaExamen, DNI_Personal, ID_Atencion, ID_Establecimiento) "
+                   + "VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection con = Conexion.getConexion();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
-            ps.setInt(1, cantidad);
-            ps.setDate(2, new java.sql.Date(fechaInicio.getTime()));
-            ps.setDate(3, new java.sql.Date(fechaFin.getTime()));
+            ps.setInt(1, cantidadMeta);
+            ps.setDate(2, sqlFechaInicio);
+            ps.setDate(3, sqlFechaFin);
             ps.setString(4, dni);
             ps.setInt(5, idAtencion);
+            ps.setInt(6, idEstablecimiento);
 
             int res = ps.executeUpdate();
-
             if (res > 0) {
                 JOptionPane.showMessageDialog(null, "Meta asignada correctamente.");
-                cargarMetasAsignadas(tableMostrarMetas);
+                // Si deseas: limpiarCamposMeta();
             } else {
                 JOptionPane.showMessageDialog(null, "No se pudo asignar la meta.");
             }
 
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al insertar meta: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Error SQL al asignar meta: " + e.getMessage());
         }
     }//GEN-LAST:event_bttAsignarMetaActionPerformed
 
@@ -370,37 +383,153 @@ public class Metas extends javax.swing.JFrame {
         limpiarCampos();
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void tableMostrarMetasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableMostrarMetasMouseClicked
+        int filaSeleccionada = tableMostrarMetas.getSelectedRow();
+        if (filaSeleccionada != -1) {
+            // Saltamos columna 0 (ID_MetaExamen)
+            String meta = tableMostrarMetas.getValueAt(filaSeleccionada, 1).toString();
+            java.util.Date fechaInicio = (java.util.Date) tableMostrarMetas.getValueAt(filaSeleccionada, 2);
+            java.util.Date fechaFin = (java.util.Date) tableMostrarMetas.getValueAt(filaSeleccionada, 3);
+            String nombre = tableMostrarMetas.getValueAt(filaSeleccionada, 4).toString();
+            String apellidoPaterno = tableMostrarMetas.getValueAt(filaSeleccionada, 5).toString();
+            String atencion = tableMostrarMetas.getValueAt(filaSeleccionada, 6).toString();
+            Object establecimientoObj = tableMostrarMetas.getValueAt(filaSeleccionada, 7);
+            String establecimiento = (establecimientoObj != null) ? establecimientoObj.toString() : "";
+
+            txtNumeroMeta.setText(meta);
+            dateFechaInicio.setDate(fechaInicio);
+            dateFechaFin.setDate(fechaFin);
+            txtNombre.setText(nombre);
+            txtApellidoPaterno.setText(apellidoPaterno);
+            cmbAtencion.setSelectedItem(atencion);
+            cmbEstablecimiento.setSelectedItem(establecimiento);
+        }
+    }//GEN-LAST:event_tableMostrarMetasMouseClicked
+
+    private void bttEditarMetaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttEditarMetaActionPerformed
+        try {
+            String nombre = txtNombre.getText().trim();
+            String apellidoPaterno = txtApellidoPaterno.getText().trim();
+            String dni = ConsultasSql.obtenerDniPersonalPorNombre(nombre, apellidoPaterno);
+            if (dni == null) {
+                JOptionPane.showMessageDialog(null, "No se pudo obtener el DNI del personal.");
+                return;
+            }
+
+            int nuevaMeta = Integer.parseInt(txtNumeroMeta.getText().trim());
+            String descAtencion = cmbAtencion.getSelectedItem().toString();
+            int idAtencion = ConsultasSql.obtenerIdAtencion(descAtencion);
+            if (idAtencion == -1) {
+                JOptionPane.showMessageDialog(null, "Atención seleccionada no válida.");
+                return;
+            }
+
+            java.sql.Date fechaInicio = new java.sql.Date(dateFechaInicio.getDate().getTime());
+            java.sql.Date fechaFin = new java.sql.Date(dateFechaFin.getDate().getTime());
+
+            String sql = "UPDATE MetaExamen SET Cantidad_MetaExamen = ?, ID_Atencion = ? " +
+                         "WHERE DNI_Personal = ? AND FechaInicio_MetaExamen = ? AND FechaFin_MetaExamen = ?";
+
+            try (Connection con = Conexion.getConexion();
+                 PreparedStatement ps = con.prepareStatement(sql)) {
+
+                ps.setInt(1, nuevaMeta);
+                ps.setInt(2, idAtencion);
+                ps.setString(3, dni);
+                ps.setDate(4, fechaInicio);
+                ps.setDate(5, fechaFin);
+
+                int res = ps.executeUpdate();
+                if (res > 0) {
+                    JOptionPane.showMessageDialog(null, "Meta actualizada correctamente.");
+                    cargarMetasAsignadas(tableMostrarMetas);
+                } else {
+                    JOptionPane.showMessageDialog(null, "No se encontró una meta con los datos especificados.");
+                }
+
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, "Error al actualizar meta: " + e.getMessage());
+            }
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "El número de meta debe ser un número válido.");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+        }
+    }//GEN-LAST:event_bttEditarMetaActionPerformed
+
+    private void bttEliminarMetaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttEliminarMetaActionPerformed
+        int fila = tableMostrarMetas.getSelectedRow();
+        if (fila == -1) {
+            JOptionPane.showMessageDialog(null, "Seleccione una meta de la tabla.");
+            return;
+        }
+
+        int confirmar = JOptionPane.showConfirmDialog(null, "¿Deseas eliminar esta meta asignada?", "Confirmación", JOptionPane.YES_NO_OPTION);
+        if (confirmar != JOptionPane.YES_OPTION) return;
+
+        int idMeta = (int) tableMostrarMetas.getValueAt(fila, 0); // Columna 0 (aunque esté oculta)
+
+        String sql = "DELETE FROM MetaExamen WHERE ID_MetaExamen = ?";
+
+        try (Connection con = Conexion.getConexion();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, idMeta);
+            int res = ps.executeUpdate();
+
+            if (res > 0) {
+                JOptionPane.showMessageDialog(null, "Meta eliminada correctamente.");
+                cargarMetasAsignadas(tableMostrarMetas); // Recarga
+            } else {
+                JOptionPane.showMessageDialog(null, "No se encontró la meta para eliminar.");
+            }
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error SQL al eliminar: " + e.getMessage());
+        }
+    }//GEN-LAST:event_bttEliminarMetaActionPerformed
+
     public static void cargarMetasAsignadas(JTable tableMostrarMetas) {
-        String[] columnas = {"Meta", "Fecha Inicio", "Fecha Fin", "Nombre", "Apellido Paterno", "Atención"};
+        String[] columnas = {"ID", "Meta", "Fecha Inicio", "Fecha Fin", "Nombre", "Apellido Paterno", "Atención", "Establecimiento"};
         DefaultTableModel modelo = new DefaultTableModel(null, columnas);
 
-        String sql = "SELECT m.Cantidad_MetaExamen, m.FechaInicio_MetaExamen, m.FechaFin_MetaExamen, " +
-                     "p.Nombres_Personal, p.ApellidoPaterno_Personal, a.Desc_Atencion " +
+        String sql = "SELECT m.ID_MetaExamen, m.Cantidad_MetaExamen, m.FechaInicio_MetaExamen, m.FechaFin_MetaExamen, " +
+                     "p.Nombres_Personal, p.ApellidoPaterno_Personal, a.Desc_Atencion, e.Nombre_Establecimiento " +
                      "FROM MetaExamen m " +
                      "INNER JOIN Personal p ON m.DNI_Personal = p.DNI_Personal " +
-                     "INNER JOIN Atencion a ON m.ID_Atencion = a.ID_Atencion";
+                     "INNER JOIN Atencion a ON m.ID_Atencion = a.ID_Atencion " +
+                     "LEFT JOIN Establecimiento e ON m.ID_Establecimiento = e.ID_Establecimiento";
 
         try (Connection con = Conexion.getConexion();
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
-                Object[] fila = new Object[6];
-                fila[0] = rs.getInt("Cantidad_MetaExamen");
-                fila[1] = rs.getDate("FechaInicio_MetaExamen");
-                fila[2] = rs.getDate("FechaFin_MetaExamen");
-                fila[3] = rs.getString("Nombres_Personal");
-                fila[4] = rs.getString("ApellidoPaterno_Personal");
-                fila[5] = rs.getString("Desc_Atencion");
+                Object[] fila = new Object[8];
+                fila[0] = rs.getInt("ID_MetaExamen");
+                fila[1] = rs.getInt("Cantidad_MetaExamen");
+                fila[2] = rs.getDate("FechaInicio_MetaExamen");
+                fila[3] = rs.getDate("FechaFin_MetaExamen");
+                fila[4] = rs.getString("Nombres_Personal");
+                fila[5] = rs.getString("ApellidoPaterno_Personal");
+                fila[6] = rs.getString("Desc_Atencion");
+                fila[7] = rs.getString("Nombre_Establecimiento");
                 modelo.addRow(fila);
             }
 
             tableMostrarMetas.setModel(modelo);
 
+            // Ocultar la primera columna (ID_MetaExamen)
+            tableMostrarMetas.getColumnModel().getColumn(0).setMinWidth(0);
+            tableMostrarMetas.getColumnModel().getColumn(0).setMaxWidth(0);
+            tableMostrarMetas.getColumnModel().getColumn(0).setWidth(0);
+
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error al cargar metas: " + e.getMessage());
         }
     }
+
     
     public void limpiarCampos(){
         txtNombre.setText("");
@@ -453,6 +582,8 @@ public class Metas extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bttAsignarMeta;
     private javax.swing.JButton bttBuscarPersonal;
+    private javax.swing.JButton bttEditarMeta;
+    private javax.swing.JButton bttEliminarMeta;
     private javax.swing.JComboBox<String> cmbAtencion;
     private javax.swing.JComboBox<String> cmbEstablecimiento;
     private javax.swing.JComboBox<String> cmbMicrored;
@@ -460,8 +591,6 @@ public class Metas extends javax.swing.JFrame {
     private com.toedter.calendar.JDateChooser dateFechaFin;
     private com.toedter.calendar.JDateChooser dateFechaInicio;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

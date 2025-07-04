@@ -63,9 +63,7 @@ public class Cita extends javax.swing.JFrame {
         jLabel11 = new javax.swing.JLabel();
         bttRegistrarPaciente = new javax.swing.JButton();
         jLabel12 = new javax.swing.JLabel();
-        txtDniPersonal = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
-        jLabel14 = new javax.swing.JLabel();
         dateFechaAtencion = new com.toedter.calendar.JDateChooser();
         jLabel15 = new javax.swing.JLabel();
         cmbAtencion = new javax.swing.JComboBox<>();
@@ -124,18 +122,18 @@ public class Cita extends javax.swing.JFrame {
 
         tableMostrarCita.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Dni Paciente", "Dni Personal", "Fecha Atencion", "Hora Atencion", "Establecimiento", "Atencion"
+                "Dni Paciente", "Fecha Atencion", "Hora Atencion", "Establecimiento", "Atencion"
             }
         ));
         jScrollPane2.setViewportView(tableMostrarCita);
 
-        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 380, 640, 140));
+        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 340, 640, 180));
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 3, 13)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(0, 0, 0));
@@ -183,17 +181,11 @@ public class Cita extends javax.swing.JFrame {
         jLabel12.setForeground(new java.awt.Color(0, 0, 0));
         jLabel12.setText("Descripción de atención:");
         jPanel1.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 300, 160, 20));
-        jPanel1.add(txtDniPersonal, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 340, 150, -1));
 
         jLabel13.setFont(new java.awt.Font("Segoe UI", 3, 13)); // NOI18N
         jLabel13.setForeground(new java.awt.Color(0, 0, 0));
         jLabel13.setText("Hora Atención:");
         jPanel1.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 300, 110, 20));
-
-        jLabel14.setText("Obstetra:");
-        jLabel14.setFont(new java.awt.Font("Segoe UI", 3, 13)); // NOI18N
-        jLabel14.setForeground(new java.awt.Color(0, 0, 0));
-        jPanel1.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 340, 70, 20));
         jPanel1.add(dateFechaAtencion, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 260, 100, -1));
 
         jLabel15.setFont(new java.awt.Font("Segoe UI", 3, 13)); // NOI18N
@@ -229,7 +221,7 @@ public class Cita extends javax.swing.JFrame {
         });
         jPanel1.add(bttBuscarPaciente, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 80, 30, -1));
         jPanel1.add(txtDniPaciente, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 80, 90, -1));
-        jPanel1.add(timeHoraAtencion, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 300, -1, -1));
+        jPanel1.add(timeHoraAtencion, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 300, -1, 20));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -339,10 +331,8 @@ public class Cita extends javax.swing.JFrame {
 
             // DNI dejCombAtenciony del personal
             String dniPaciente = txtDniPaciente.getText().trim();
-            String dniPersonal = txtDniPersonal.getText().trim();
-
-            if (dniPaciente.isEmpty() || dniPersonal.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Complete el DNI del paciente y del personal.");
+            if (dniPaciente.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Complete el DNI del paciente.");
                 return;
             }
 
@@ -356,8 +346,8 @@ public class Cita extends javax.swing.JFrame {
             
             // Registrar cita
             try (Connection con = Conexion.getConexion()) {
-                String sql = "INSERT INTO Cita (FechaRegistro_Cita, FechaAtencion_Cita, HoraAtencion_Cita, ID_Establecimiento, DNI_Paciente, DNI_Personal, ID_Atencion, ID_Usuario) "
-                           + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                String sql = "INSERT INTO Cita (FechaRegistro_Cita, FechaAtencion_Cita, HoraAtencion_Cita, ID_Establecimiento, DNI_Paciente, ID_Atencion, ID_Usuario) "
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
                 PreparedStatement ps = con.prepareStatement(sql);
                 ps.setString(1, fechaRegistro);
@@ -365,13 +355,13 @@ public class Cita extends javax.swing.JFrame {
                 ps.setString(3, horaAtencion);
                 ps.setInt(4, idEstablecimiento);
                 ps.setString(5, dniPaciente);
-                ps.setString(6, dniPersonal);
-                ps.setInt(7, idAtencion);
-                ps.setInt(8, idUsuario);
+                ps.setInt(6, idAtencion);
+                ps.setInt(7, idUsuario);
 
                 int rows = ps.executeUpdate();
                 if (rows > 0) {
                     JOptionPane.showMessageDialog(this, "Cita registrada correctamente.");
+                    cargarCitasEnTabla();
                 } else {
                     JOptionPane.showMessageDialog(this, "No se pudo registrar la cita.");
                 }
@@ -464,7 +454,6 @@ public class Cita extends javax.swing.JFrame {
 
             while (rs.next()) {
                 String dniPaciente = rs.getString("DNI_Paciente");
-                String dniPersonal = rs.getString("DNI_Personal");
                 Date fechaAtencion = rs.getDate("FechaAtencion_Cita");
 
                 Time horaAtencionSQL = rs.getTime("HoraAtencion_Cita");
@@ -473,7 +462,8 @@ public class Cita extends javax.swing.JFrame {
                 String establecimiento = rs.getString("Nombre_Establecimiento");
                 String atencion = rs.getString("Desc_Atencion");
 
-                Object[] fila = {dniPaciente, dniPersonal, fechaAtencion, horaAtencion, establecimiento, atencion};
+                Object[] fila = {dniPaciente, fechaAtencion, horaAtencion, establecimiento, atencion};
+
                 modelo.addRow(fila);
             }
 
@@ -535,7 +525,6 @@ public class Cita extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -552,7 +541,6 @@ public class Cita extends javax.swing.JFrame {
     private javax.swing.JTextField txtApellidoMaternoPaciente;
     private javax.swing.JTextField txtApellidoPaternoPaciente;
     private javax.swing.JTextField txtDniPaciente;
-    private javax.swing.JTextField txtDniPersonal;
     private javax.swing.JTextField txtNombrePaciente;
     // End of variables declaration//GEN-END:variables
 }

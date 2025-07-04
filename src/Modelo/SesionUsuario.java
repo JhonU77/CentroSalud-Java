@@ -38,5 +38,6 @@ public class SesionUsuario {
     public static void clear() {
         dniUsuario = null;
         correoUsuario = null;
+        cargoUsuario = null;
     }
 }
