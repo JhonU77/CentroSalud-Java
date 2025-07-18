@@ -373,7 +373,6 @@ public class Metas extends javax.swing.JFrame {
             int res = ps.executeUpdate();
             if (res > 0) {
                 JOptionPane.showMessageDialog(null, "Meta asignada correctamente.");
-                // Si deseas: limpiarCamposMeta();
             } else {
                 JOptionPane.showMessageDialog(null, "No se pudo asignar la meta.");
             }
@@ -468,7 +467,7 @@ public class Metas extends javax.swing.JFrame {
 
             if (res > 0) {
                 JOptionPane.showMessageDialog(null, "Meta eliminada correctamente.");
-                cargarMetasAsignadas(tableMostrarMetas); // Recarga
+                cargarMetasAsignadas(tableMostrarMetas);
             } else {
                 JOptionPane.showMessageDialog(null, "No se encontró la meta para eliminar.");
             }

@@ -268,7 +268,7 @@ public class Atencion extends javax.swing.JFrame {
             txtEdad.setText("");
             txtAtencion.setText("");
             idCitaSeleccionada = -1;
-            MostrarCitas(); // refrescar tabla
+            MostrarCitas();
 
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, "Error al registrar atención: " + e.getMessage());

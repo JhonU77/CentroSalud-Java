@@ -305,7 +305,6 @@ public class Cita extends javax.swing.JFrame {
             String nombreAtencion = cmbAtencion.getSelectedItem().toString();
             int idAtencion = ConsultasSql.obtenerIdAtencion(nombreAtencion);
 
-            // DNI dejCombAtenciony del personal
             String dniPaciente = txtDniPaciente.getText().trim();
             if (dniPaciente.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Complete el DNI del paciente.");
@@ -503,7 +502,7 @@ public class Cita extends javax.swing.JFrame {
     
     private void cargarCitasEnTabla() {
         DefaultTableModel modelo = (DefaultTableModel) tableMostrarCita.getModel();
-        modelo.setRowCount(0); // Limpiar tabla
+        modelo.setRowCount(0);
 
         String sql = "SELECT c.DNI_Paciente, c.DNI_Personal, c.FechaAtencion_Cita, c.HoraAtencion_Cita, " +
                      "e.Nombre_Establecimiento, a.Desc_Atencion " +
