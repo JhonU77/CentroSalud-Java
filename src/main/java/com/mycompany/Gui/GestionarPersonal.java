@@ -300,7 +300,7 @@ public class GestionarPersonal extends javax.swing.JFrame {
         });
         jPanel2.add(jbttEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 180, 110, -1));
 
-        jCombCargo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Admin", "Jefe de Area", "Usuario Limitado" }));
+        jCombCargo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Admin", "Jefe de Area", "Usuario Limitado", "Super Admin" }));
         jPanel2.add(jCombCargo, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 220, 210, -1));
 
         jbttValidar.setBackground(new java.awt.Color(0, 102, 0));

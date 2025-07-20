@@ -16,9 +16,11 @@ com\mycompany\Gui\Cita.class
 com\mycompany\Gui\Reportes$2.class
 com\mycompany\Gui\Atencion$6.class
 com\mycompany\Gui\Metas$3.class
+com\mycompany\Gui\CambioContrasena$6$1.class
 com\mycompany\Gui\Reportes$22.class
 com\mycompany\Gui\Cita$3.class
 com\mycompany\Gui\CambioContrasena$3.class
+com\mycompany\Gui\CambioContrasena$6.class
 com\mycompany\Gui\Atencion$3.class
 com\mycompany\Gui\Metas$11.class
 com\mycompany\Gui\Sesion$6.class
@@ -64,7 +66,6 @@ com\mycompany\Gui\RecuperarContrasena$3.class
 com\mycompany\Gui\Reportes$21.class
 com\mycompany\Gui\Reportes$3.class
 com\mycompany\Gui\Metas$4.class
-com\mycompany\Gui\CambioContrasena$5$1.class
 com\mycompany\Gui\VerificarMetas$1$1.class
 com\mycompany\Modelo\SesionUsuario.class
 com\mycompany\Gui\Sesion$2.class

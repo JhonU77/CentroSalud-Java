@@ -302,17 +302,19 @@ public class Principal extends javax.swing.JFrame {
             switch (rol) {
                 case "Jefe de Area":
                 puedeAccederCita = true;
-                puedeAccederPersonal = true;
                 puedeAccederAtencion = true;
                 puedeAccederReporte = true;
                 puedeAccederMetas = true;
+                JOptionPane.showMessageDialog(this, "Rol: " + rol);
                 break;
                 case "Usuario Limitado":
                 puedeAccederCita = true;
                 puedeAccederAtencion = true;
+                JOptionPane.showMessageDialog(this, "Rol: " + rol);
                 break;
                 case "Admin":
                 puedeAccederPersonal = true;
+                JOptionPane.showMessageDialog(this, "Rol: " + rol);
                 break;
                 default:
                 JOptionPane.showMessageDialog(this, "Rol no reconocido: " + rol);

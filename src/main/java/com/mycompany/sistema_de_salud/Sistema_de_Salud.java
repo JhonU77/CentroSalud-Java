@@ -4,6 +4,8 @@
 
 package com.mycompany.sistema_de_salud;
 
+import com.mycompany.Gui.Principal;
+
 /**
  *
  * @author farro
@@ -11,6 +13,6 @@ package com.mycompany.sistema_de_salud;
 public class Sistema_de_Salud {
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        new Principal().setVisible(true); 
     }
 }

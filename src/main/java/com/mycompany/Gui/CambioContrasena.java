@@ -24,6 +24,27 @@ public class CambioContrasena extends javax.swing.JDialog {
     public CambioContrasena(java.awt.Dialog parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        jpassNuevaContrasena.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                actualizar();
+            }
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                actualizar();
+            }
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                actualizar();
+            }
+            private void actualizar() {
+                String pass = new String(jpassNuevaContrasena.getPassword());
+                validarRequisitosContrasena(pass);
+                
+                boolean ok = ValidarContrasena.tieneLongitudMinima(pass) &&
+                             ValidarContrasena.tieneMayuscula(pass) &&
+                             ValidarContrasena.tieneSimbolo(pass);
+
+                jbttConfirmar.setEnabled(ok);
+            }
+        });
     }
 
     /**
@@ -226,6 +247,24 @@ public class CambioContrasena extends javax.swing.JDialog {
         jlabel1mayuscula.setForeground(java.awt.Color.RED);
         jlabel1simbolo.setForeground(java.awt.Color.RED);
         jbttConfirmar.setEnabled(false);
+    }
+    
+    private void validarRequisitosContrasena(String pass) {
+        if (ValidarContrasena.tieneLongitudMinima(pass)) {
+            jlabel8caracter.setForeground(new java.awt.Color(0, 128, 0)); // verde
+        } else {
+            jlabel8caracter.setForeground(java.awt.Color.RED);
+        }
+        if (ValidarContrasena.tieneMayuscula(pass)) {
+            jlabel1mayuscula.setForeground(new java.awt.Color(0, 128, 0));
+        } else {
+            jlabel1mayuscula.setForeground(java.awt.Color.RED);
+        }
+        if (ValidarContrasena.tieneSimbolo(pass)) {
+            jlabel1simbolo.setForeground(new java.awt.Color(0, 128, 0));
+        } else {
+            jlabel1simbolo.setForeground(java.awt.Color.RED);
+        }
     }
     /**
      * @param args the command line arguments
